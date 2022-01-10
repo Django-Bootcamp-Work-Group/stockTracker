@@ -12,20 +12,27 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+
+
+env.read_env(str(BASE_DIR / ".env"))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*24c&h=)57(c$fnzxcd!pzx$(@h%bpbq5(g&(0e-+^uwm!0ob4'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 
 # Application definition
@@ -37,6 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_countries',
+    'django_extensions',
+    'core',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -73,12 +84,9 @@ WSGI_APPLICATION = 'stracker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+
+DATABASES = {"default": env.db("DATABASE_URL")}
+
 
 
 # Password validation
@@ -103,9 +111,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en"
 
-TIME_ZONE = 'UTC'
+
+def gettext_noop(s):
+    return s
+
+
+LANGUAGES = [
+    ("en", gettext_noop("English")),
+    ("tr", gettext_noop("Turkish")),
+    ("de", gettext_noop("German")),
+    ("fr", gettext_noop("French")),
+]
+
+TIME_ZONE = env("TIME_ZONE")
 
 USE_I18N = True
 
@@ -123,3 +143,4 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = "users.User"
