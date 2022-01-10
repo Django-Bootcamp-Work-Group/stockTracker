@@ -3,8 +3,10 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_countries.fields import CountryField
 
 
+from users import enums
 from users.managers import UserManager
 
 
@@ -18,13 +20,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     username_validator = UnicodeUsernameValidator()
 
-    full_name = models.CharField(_("first name"), max_length=150, blank=True, null=True)
+    first_name = models.CharField(_("first name"), max_length=150, blank=True, null=True)
+    last_name = models.CharField(_("last name"), max_length=150, blank=True, null=True)
+    full_name = str(first_name) + " " + str(last_name)
     email = models.EmailField(
         _("email address"), unique=True, validators=[username_validator]
     )
     gender = models.CharField(
         choices=enums.Gender.choices, verbose_name=_("Gender"), max_length=30
     )
+
+    date_of_birth = models.DateTimeField(_("date joined"), blank=True, null=True)
+
+    # country code is implemented via django-countries library,
+    # which provides preset of country abbreviation with 2 characters
+    country_code = CountryField()
 
     is_staff = models.BooleanField(
         _("staff status"),
@@ -39,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             "Unselect this instead of deleting accounts."
         ),
     )
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    #date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
     objects = UserManager()
 
