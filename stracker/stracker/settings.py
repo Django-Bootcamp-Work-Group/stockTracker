@@ -33,7 +33,7 @@ DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
-gettext_noop
+
 # Application definition
 
 INSTALLED_APPS = [
