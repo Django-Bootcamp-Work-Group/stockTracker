@@ -11,7 +11,7 @@ class Items(BaseAbstractModel):
     type is Charfield with choices comes from enums.py
     """
     name = models.CharField(_("name"), max_length=150, null=False, blank=False)
-    type = status = models.CharField(
+    item_type = models.CharField(
         choices=enums.ItemTypes.choices,
         default=enums.ItemTypes.FRUIT,
         max_length=30,
@@ -23,4 +23,11 @@ class Items(BaseAbstractModel):
     status = models.BooleanField(_("status"), null=False, blank=False)
 
     def __str__(self):
-        return f"{self.name}"
+        """
+        As a representation, name + the first 30 char of description if exist
+        """
+        if len(self.description) > 30:
+            repr_str = self.description[29]
+        else:
+            repr_str = self.description
+        return f"{self.name} - {repr_str}"
