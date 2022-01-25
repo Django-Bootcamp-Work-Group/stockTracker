@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "locations",
     "shelves",
     "users",
-    "utils",
 
 ]
 
