@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_extensions",
+    "customusers",
+    "core",
+    "items",
 ]
 
 MIDDLEWARE = [
@@ -113,7 +116,7 @@ LANGUAGES = [
     ("tr", _("Turkish")),
 ]
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = env("TIME_ZONE")
 
 USE_I18N = True
 
@@ -132,3 +135,7 @@ MEDIA_URL = "/media/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "customusers.CustomUser"
+
+LOCALE_PATHS = ((BASE_DIR / "locale/"),)
