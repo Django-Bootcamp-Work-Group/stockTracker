@@ -1,14 +1,17 @@
+import uuid
+
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.validators import EmailValidator
 from django.core.mail import send_mail
 from django.db import models
 
 
-class Customer(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
     An abstract base class implementing a fully featured User model with
     admin-compliant permissions.
@@ -16,7 +19,9 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     Username and password are required. Other fields are optional.
     """
     username_validator = UnicodeUsernameValidator()
+    email_validator = EmailValidator()
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     username = models.CharField(
         _('username'),
         max_length=150,
@@ -29,7 +34,14 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    email = models.EmailField(_('email address'), blank=True)
+    email = models.EmailField(
+        _('email address'),
+        blank=True,
+        unique=True,
+        error_messages={
+            'unique': _("A user with that email address already exists."),
+        },
+    )
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
@@ -47,9 +59,9 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    # EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         verbose_name = _('user')

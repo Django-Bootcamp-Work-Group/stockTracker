@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_extensions",
-    "customers",
+    "customusers",
     "core",
     "items",
 ]
@@ -136,6 +136,6 @@ MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "customers.Customer"
+AUTH_USER_MODEL = "customusers.CustomUser"
 
-LOCALE_PATHS = (str(BASE_DIR / "locale/"),)
+LOCALE_PATHS = ((BASE_DIR / "locale/"),)
