@@ -50,8 +50,6 @@ class Item(BaseAbstractModel):
     """
     sku = models.CharField(verbose_name=_("SKU"), max_length=128, unique=True)
     name = models.CharField(verbose_name=_("name"), max_length=128)
-    # owner = models.ForeignKey(CustomUser, verbose_name=_("Owner"), on_delete=models.PROTECT)
-    # shelf = models.ForeignKey(Shelf, verbose_name=_("Shelf"), on_delete=models.CASCADE)
     categories = models.ManyToManyField(Category, verbose_name=_("Categories"))
     description = models.TextField(max_length=2000, verbose_name=_("Description"))
     qrcode = models.CharField(verbose_name=_("QR Code"), max_length=128)
@@ -90,7 +88,6 @@ class StockMovements(BaseAbstractModel):
     """
     movement_from = models.ForeignKey(Stock, verbose_name=_("Movement From"), on_delete=models.PROTECT, related_name="from_stock_set")
     movement_to = models.ForeignKey(Stock, verbose_name=_("Movement To"), on_delete=models.PROTECT, related_name="to_stock_set")
-    # stock = models.ForeignKey(Stock, verbose_name=_("Stock"), on_delete=models.PROTECT)
     movement_type = models.CharField(choices=enums.MovementTypes.choices, verbose_name=_("Movement Type"), max_length=50)
     quantity = models.PositiveSmallIntegerField(verbose_name=_("Quantity"))
     movement_time = models.DateTimeField(verbose_name=_("Movement Time"), default=now)
